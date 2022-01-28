@@ -1,8 +1,23 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IGanttChartEvent } from '../_models/gantt-chart-event.model';
-import { IGanttCharRow } from '../_models/gantt-chart-row.model';
-import { MonthAxis } from '../_models/month-axis.model';
-import { DateHelperService } from '../_services/date-helper.service';
+import { IDayAxis } from '../../interfaces/day-axis.model';
+import { GlobalsService } from 'src/app/services/globals.service';
+import { MS_IN_DAY } from '../arena';
+import { IGanttCharRow } from './igantt-chart-row.model';
+import { WatchEvent } from '../../base/watch-event';
+//import { HEB_DAYS } from 'src/app/base/time-helper';
+
+
+const HEB_DAYS = [
+      'א' + '\'',
+      'ב'+ '\'',
+      'ג'+ '\'',
+      'ד'+ '\'',
+      'ה'+ '\'',
+      'ו'+ '\'',
+      'שבת',
+      
+    ];
+
 
 @Component({
   selector: 'app-gantt-chart-control',
@@ -11,10 +26,12 @@ import { DateHelperService } from '../_services/date-helper.service';
 })
 export class GanttChartControlComponent implements OnInit {
   @Input() rows: IGanttCharRow[] =[];
-  @Input() startDate: Date = new Date('2021-01-01');
-  @Input() endDate: Date = new Date('2021-04-30');
-  chartPeriodDays: number;
-  monthAxis: MonthAxis[];
+  @Input() beginDate: Date = this.g.beginDate;
+  @Input() endDate: Date = this.g.endDate;
+  readonly nDays: number;
+  readonly chartLengthMs: number;
+  readonly chartBeginMs: number;
+  dayAxis: IDayAxis[];
   colourPallete = ['#7C4DFF',
                   '#81c784',
                   '#e53935',
@@ -24,52 +41,60 @@ export class GanttChartControlComponent implements OnInit {
                   '#006064',
                   '#FF8A65']
 
-  constructor() { 
-    this.chartPeriodDays = DateHelperService.dateDifference(this.endDate, this.startDate, true);
-    this.monthAxis = this.getMonths(this.startDate, this.endDate);
+  constructor(readonly g : GlobalsService) { 
+  
+    this.nDays = this.g.nDays;
+    this.chartLengthMs = this.nDays * MS_IN_DAY;
+    this.chartBeginMs = this.g.beginDate.getTime();
+    this.dayAxis = this.getAxisDays(this.beginDate, this.nDays);
+ 
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
+   
+   
+    this.rows = await this.g.createSitePlanEvents();
+    console.dir(this.rows);
+     
   }
-
-  /** Given an event calculate the percentage of days over the total gantt chart period */
-  getEventDurationPercentage(event: IGanttChartEvent): number {
-    const eventDays = DateHelperService.dateDifference(event.endDate, event.startDate);
-    return (eventDays/this.chartPeriodDays) * 100;
-
-  }
-
-  /** Given an date the percentage of days over the total gantt chart period */
-  getEventOffsetPercentage(eventStartDate: Date): number {
-    const daysPriorToEventStart = DateHelperService.dateDifference(eventStartDate, this.startDate);
-    return ((daysPriorToEventStart-1)/this.chartPeriodDays)*100;
-  }
-
-  /** Given a start and end date will return full months between period along with month names and 
-   * relative duration percentages for each month
-   */
-  getMonths(startDate: Date, endDate: Date): MonthAxis[] {
-    const startMonth = startDate.getMonth();
-    const endMonth= endDate.getMonth();
-    const totalDurationDays = DateHelperService.dateDifference(startDate, endDate, true);
-    let months: MonthAxis[] = new Array();
-    for(var i = 0; i<= endMonth - startMonth; i++) {
-      const adjustedStartDate = DateHelperService.addMonths(startDate, i);
-      const monthName = DateHelperService.getMonthName(adjustedStartDate);
-      const daysInMonth = DateHelperService.daysInMonth(adjustedStartDate);
-      const monthDurationPercentage = daysInMonth/totalDurationDays * 100;
-      months.push({monthName: monthName, monthDurationPercentage: monthDurationPercentage});
+  getAxisDays(beginDate: Date, nDays: number): IDayAxis[] {
+   
+    let dayAxisArr: IDayAxis[] = new Array<IDayAxis>();
+    const _dayLenPc = +(100 / this.nDays).toFixed(2);
+ 
+    for (let index = 0, dayMs = beginDate.getTime();
+      index < this.g.nDays; index++,dayMs +=  MS_IN_DAY) {
+      let day = new Date(dayMs);
+      let dow = HEB_DAYS[day.getDay()];
+      const _dayName = dow + ' ' + day.getDate();
+      dayAxisArr.push({ dayName: _dayName, dayLenPc: _dayLenPc } as IDayAxis);
+      
     }
-    return months;
+    return dayAxisArr;
+  }
+   
+  evDurationPc(event: WatchEvent): string {
+   
+    const durPc = 100 * (event.lengthMs / this.chartLengthMs);
+     return durPc.toFixed(2);
+
   }
 
-   /** Given colour for */
-  getColour(rowIndex: number): string {
-    if(this.rows.length < rowIndex) {
-      return '#64b5f6';
-    }
+  evOffsetPc(event: WatchEvent): string {
+    // debugger;
+    let offsPc = 100 * (event.beginMs - this.chartBeginMs) / this.chartLengthMs;
+   
+     return offsPc.toFixed(2);
+  }
 
-    return this.colourPallete[rowIndex];
+  private ni = -1;
+
+  getColour(idx: number): string {
+    // if(this.rows.length < rowIndex) {
+    //   return '#64b5f6';
+    // }
+    this.ni = (++this.ni) % this.colourPallete.length;
+    return this.colourPallete[this.ni];
   }
 
 }

@@ -7,127 +7,131 @@ $border: 1px solid #e7e7ea;
 $alternate-row-background-color: #fafafa;
 
 .container {
-    min-width:600px;
-    .row-axis {
-        display: flex;
-        flex-direction: row;
-        overflow: hidden;
-        text-align: center;
-        background-color: $header-background-color;
-        color:white;
-               
-        .row-title {
-            font-weight:bold;
-            width: $title-row-width;
-            padding-right: 1rem;
-            padding-left: 1rem;
+  min-width: 600px;
+ 
+  .row-axis {
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+    text-align: center;
+    background-color: $header-background-color;
+    color: white;
 
-        }
-        .month-axis {
-            font-weight: bold;
-            position: relative;
-            display:flex;
-            width: 100%;
-            align-items: stretch;
+    .row-title {
+      font-weight: bold;
+      width: $title-row-width;
+      padding-right: 1rem;
+      padding-left: 1rem;
 
-            .month {
-                margin:auto;
-                height:100%;
-                border-right:$header-border;
-            }
+    }
 
-            .month:first-child {
-                border-left:$header-border;
-            }
-        }
+    .day-axis {
+      font-weight: bold;
+      position: relative;
+      display: flex;
+      width: 100%;
+      align-items: stretch;
+
+      .day {
+        margin: auto;
+        height: 100%;
+        border-right: $header-border;
+      }
+
+      .day:first-child {
+        border-left: $header-border;
+      }
+    }
+
+  }
+
+  .gantt-chart-row {
+    font-size: $font-size;
+    border-top: $border;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+
+    .row-title {
+      font-weight: bold;
+      width: $title-row-width;
+      border-right: $border;
+      padding: 1rem;
+      background-color: $title-colum-background;
+    }
+
+    .event-period {
+      height: 40%;
+      position: absolute;
+      border-radius: 16px 16px 16px 16px;
+      text-align: center;
+
+      .event-name {
         
+        text-align: center;
+        vertical-align: middle;
+        font-size: 0.7rem;
+        font-weight: bold;
+      }
     }
 
-    .gantt-chart-row {
-        font-size:$font-size;
-        border-top: $border;
-        display: flex;
-        flex-direction: row;
-        overflow: hidden;
-
-        .row-title {
-            font-weight:bold;
-            width: $title-row-width;
-            border-right:$border;
-            padding: 1rem;
-            background-color: $title-colum-background;
-        }
-
-        .event-period {
-            height:40%;
-            position:absolute;
-            border-radius: 16px 16px 16px 16px;
-            text-align: center;
-            .event-name {
-                color:white;
-                text-align: center;
-                vertical-align: middle;
-                font-size:0.7rem;
-                font-weight:bold;
-            }
-        }
-
-        .event-milestone {
-            position: absolute;
-            font-size: 0.7rem;
-            color: orange;
-        }
-
-        .row-events {
-            position: relative;
-            display:flex;
-            align-items: center;
-            width: 100%;
-        }
-
-        .grid-lines {
-            display:flex;
-            width:100%;
-            height: 100%;
-            .grid-line {
-                border-right:$border;
-            }
-        }
+    .event-milestone {
+      position: absolute;
+      font-size: 0.7rem;
+      color: orange;
     }
 
-    .gantt-chart-row:last-child {
-        border-bottom: $border;           
-
+    .row-events {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
     }
 
-    .gantt-chart-row:nth-child(odd) {
-        .row-events {
-            background-color: $alternate-row-background-color;
-        }
-    }
+    .grid-lines {
+      display: flex;
+      width: 100%;
+      height: 100%;
 
-    .gantt-chart-row:first-child {
-        border: none;    
-        .row-title {
-            border: none;
-        }       
+      .grid-line {
+        border-right: $border;
+      }
     }
+  }
 
-    .tooltip:hover .tooltip-text {
-        display:block;
+  .gantt-chart-row:last-child {
+    border-bottom: $border;
+
+  }
+
+  .gantt-chart-row:nth-child(odd) {
+    .row-events {
+      background-color: $alternate-row-background-color;
     }
+  }
 
-    .tooltip-text {
+  .gantt-chart-row:first-child {
+    border: none;
+
+    .row-title {
+      border: none;
+    }
+  }
+
+  .tooltip:hover .tooltip-text {
+    display: block;
+  }
+
+  .tooltip-text {
     display: none;
     color: white;
     position: fixed;
     z-index: 1000;
-    background:black;
-    max-width:10rem;
+    background: black;
+    max-width: 10rem;
     text-align: center;
-    padding:0.5rem;
+    padding: 0.5rem;
     margin-left: -5px;
     margin-top: 5px;
-    }
+  }
 }
-   
