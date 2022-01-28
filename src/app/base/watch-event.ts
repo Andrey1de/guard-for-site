@@ -65,7 +65,15 @@ export class WatchEvent implements IWatchEvent{
         
         return new WatchEvent(siteId, beginDate, endDate, name,guardId);
     }
-
+    static getBackground(that: WatchEvent): string {
+        
+        if (!that.active) return 'black';
+        const hr = that.beginDate.getHours();
+        if (hr < 10) return 'rgba(0, 255, 255, 0.2)';//SkyBlue
+        if (hr < 17) return 'rgba(255, 255, 0, 0.6)';//Sun;
+        return 'rgba(0, 0, 255,0.4)';//Night sky
+        //251, 172, 19
+    }
    
     //"-06:00+12"
     static fromTemplateString(siteId: number,
@@ -90,7 +98,8 @@ export class WatchEvent implements IWatchEvent{
              
                 retWatch = new WatchEvent(siteId, begRet, endRet, '', (active) ? 0 : -1);
                 retWatch.textColor = (active) ? 'black' : 'white';
-                retWatch.background = (active) ? 'cyan' :'black';
+                retWatch.background = WatchEvent.getBackground(retWatch);//(active) ? 'cyan' : 'black';
+                
                 retWatch.name = (active) ?
                     'הגדר' :
                     'לא פעיל'
@@ -106,5 +115,7 @@ export class WatchEvent implements IWatchEvent{
     	return retWatch;
         
     }
-
+ 
 }
+
+

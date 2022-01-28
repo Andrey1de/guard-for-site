@@ -3,26 +3,31 @@
     <!-- header row-->
     <div class="row-axis">
         <div class="row-title">
-            Activities
+            {{leftTopTitle}}
         </div>
-        <div class="day-axis">
+        <div class="day-axis" >
             <span class="day" *ngFor="let day of dayAxis"
                 [style.width]="day.dayLenPc + '%'"> {{day.dayName}}</span>
         </div>
     </div>
 
      <!-- gantt chart rows-->
-    <div class="gantt-chart-row" *ngFor="let row of rows; let i = index">
+    <div class="gantt-chart-row" *ngFor="let row of rows; let i = index"
+    >
         <div class="row-title">
             {{row.name}}
         </div>
-        <div class="row-events">
+        <div class="row-events" >
                 <!-- event period blocks-->
-                <div class="event-period tooltip" *ngFor="let event of row.events"
+                <div class="event-period tooltip"
+                 *ngFor="let event of row.events"
                 [style.margin-left]="evOffsetPc(event)+'%'"
                 [style.width]="evDurationPc(event) + '%'" 
                 [style.color]="event.textColor"
-                [style.background]="event.background" >
+                [style.background]="event.background"
+                [class.free-border] = "event.guardId === 0" 
+                (click)='onWatchClick($event, event)'
+               >
                     <span class="event-name">{{event.name}}</span>
                     <div class="tooltip-text">
                         <div><strong>{{event.background}}: </strong></div>
@@ -42,7 +47,7 @@
             </div> -->
 
             <!-- gantt chart grid lines-->
-            <div class="grid-lines">
+            <div class="grid-lines" (click)="onRowClick($event)">
                 <span class="grid-line" *ngFor="let day of dayAxis"
                 [style.width]="day.dayLenPc + '%'"></span>
             </div>

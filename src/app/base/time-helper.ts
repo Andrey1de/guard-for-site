@@ -4,15 +4,14 @@ export const MS_IN_HOUR = 3600 * 1000;
 export const MS_IN_DAY = MS_IN_HOUR * 24;
 export const MS_IN_WEEK = MS_IN_DAY * 7;
 export const HEB_DAYS = [
-      'א',
-      'ב',
-      'ג',
-      'ד',
-      'ה',
-      'ו',
-      'שבת',
-      
-    ];
+  'א' + '\'',
+  'ב' + '\'',
+  'ג' + '\'',
+  'ד' + '\'',
+  'ה' + '\'',
+  'ו' + '\'',
+  'שבת',
+];
     
 export class TimeHelper {
   static getMidnight(date: Date): Date{
@@ -33,12 +32,12 @@ export class TimeHelper {
     
   }
   static getHebMonthName(date: Date): string {
-    const options : Intl.DateTimeFormatOptions= { month: 'short' };
-    return new Intl.DateTimeFormat('en-US', options).format(date);
+    const options : Intl.DateTimeFormatOptions= { month: 'long' };
+    return new Intl.DateTimeFormat('he-IL', options).format(date);
   }
   static getHebDayName(date: Date): string {
  //   const options : Intl.DateTimeFormatOptions= { month: 'short' };
-    return HEB_DAYS[date.getDay()] + '\'';
+    return HEB_DAYS[date.getDay()] ;
   }
   static toString(date: Date) {
     const f2 = (n: number) => '0' + n;
