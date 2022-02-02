@@ -14,34 +14,49 @@ export const HEB_DAYS = [
 ];
     
 export class TimeHelper {
-  static getMidnight(date: Date): Date{
+  static getMidnight(date: Date): Date {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate());
   }
-  static castBegEnd(begEnd1: IBegEnd, begEnd2: IBegEnd) : IBegEnd | undefined {
-    const begMs: number = Math.max(begEnd1.beginDate.getTime(),
-        begEnd2.beginDate.getTime());
-  const endMs: number = Math.min(begEnd1.endDate.getTime(),
-    begEnd2.endDate.getTime());
+  static castBegEnd(begEnd1: IBegEnd, begEnd2: IBegEnd): IBegEnd | undefined {
+    const begMs: number = Math.max(
+      begEnd1.beginDate.getTime(),
+      begEnd2.beginDate.getTime()
+    );
+    const endMs: number = Math.min(
+      begEnd1.endDate.getTime(),
+      begEnd2.endDate.getTime()
+    );
     if (begMs >= endMs) return undefined;
     return { beginDate: new Date(begMs), endDate: new Date(endMs) };
 
-// ---------[          ]------------------------
-// ---------------[          ]------------------------
-// ---------------[    ]------------------------
-
-    
+    // ---------[          ]------------------------
+    // ---------------[          ]------------------------
+    // ---------------[    ]------------------------
   }
   static getHebMonthName(date: Date): string {
-    const options : Intl.DateTimeFormatOptions= { month: 'long' };
+    const options: Intl.DateTimeFormatOptions = { month: 'long' };
     return new Intl.DateTimeFormat('he-IL', options).format(date);
   }
   static getHebDayName(date: Date): string {
- //   const options : Intl.DateTimeFormatOptions= { month: 'short' };
-    return HEB_DAYS[date.getDay()] ;
+    //   const options : Intl.DateTimeFormatOptions= { month: 'short' };
+    return HEB_DAYS[date.getDay()];
   }
-  static toString(date: Date) {
-    const f2 = (n: number) => '0' + n;
-    return (`${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`);
-    
+
+}
+function p2(p: number): string {
+  const str: string = p.toString();
+  return str.length < 2 ? '0' + str : str;
+}
+export function dateToString(date: Date , isTime:boolean = false): string {
+  let str = `${date.getFullYear()}-${p2(date.getMonth() + 1)}-${p2(
+    date.getDate()
+  )}`;
+  if (isTime ){//|| date.getHours() != 0 || date.getMinutes() != 0) {
+    str += ` ${p2(date.getHours())}:${p2(date.getMinutes())}`;
   }
+  return str;
+}
+
+export function getMidnight(date: Date): Date {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
 }

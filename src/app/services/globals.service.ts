@@ -1,122 +1,112 @@
-import {  Injectable } from '@angular/core';
-import { WatchEvent as WatchEvent } from '../base/watch-event';
 import { MOKGuardsJSon } from '../data/json/guards.data';
 import { MokSitesJSon } from '../data/json/sites.data';
-import { IGanttCharRow } from '../gantt-chart/gantt-chart-control/igantt-chart-row.model';
 import { IGuardJson } from '../interfaces/iguard-json';
 import { ISiteJson } from '../interfaces/isite-json';
 export const MS_IN_HOUR = 3600 * 1000;
 export const MS_IN_DAY = MS_IN_HOUR * 24;
-//export 
+//export
 
-@Injectable({
-  providedIn: 'root'
-})
 export class GlobalsService {
-
-  private isites: ISiteJson[] = [];
-  private iguards: IGuardJson[] = [];
-  readonly siteEventsMap: Map<number, IGanttCharRow> =
-    new Map<number, IGanttCharRow>();
-
-
-  async createSitePlanEvents(): Promise<IGanttCharRow[]> {
-    this.isites = MokSitesJSon;
-    this.iguards = MOKGuardsJSon;
-
-    this.siteEventsMap.clear();
-
-    this.isites.forEach(isite => {
-      const row = this.createWatchPlan(isite);
-      this.siteEventsMap.set(isite.siteId, row);
-    })
-    return [...this.siteEventsMap.values()];
-
-  }
-  
   static _Global: GlobalsService;
-  static get Global(): GlobalsService { return GlobalsService.Global; }
-  
+  static get Global(): GlobalsService {
+    return GlobalsService.Global;
+  }
+
+  readonly mapSiteJson: Map<number, ISiteJson> = new Map<number, ISiteJson>();
+  readonly mapGuardJson: Map<number, IGuardJson> = new Map<
+    number,
+    IGuardJson
+  >();
+
+  private iSites: ISiteJson[] = []; //MokSitesJSon;
+  private iGuards: IGuardJson[] = []; //MOKGuardsJSon;
+
   constructor() {
     GlobalsService._Global = this;
+    this.setStaticData();
+  }
+  getSite(siteId: number): ISiteJson {
+    return (
+      this.mapSiteJson.get(siteId) ||
+      ({
+        siteId: siteId,
+        name: 'SITE ERROR',
+        address: '',
+        watchStrArr: [],
+      } as ISiteJson)
+    );
   }
 
-  setGlobals(midnight: string, nDays: number) {
-    const date = new Date(midnight);
-
-    this._beginDate = new Date(date.getFullYear(), date.getMonth(), date.getDate())
-    
+  getGuard(guardId: number): IGuardJson {
+    return (
+      this.mapGuardJson.get(guardId) ||
+      ({
+        guardId: guardId,
+        manager: '--',
+        name: 'GUARD ERROR',
+        background: 'red',
+        textColor: 'white',
+      } as IGuardJson)
+    );
   }
-  
+
+  setStaticData() {
+    this.iSites = MokSitesJSon;
+    this.iGuards = MOKGuardsJSon;
+
+    if (this.mapGuardJson.size == 0 && this.iGuards.length > 0) {
+      this.iGuards.forEach((g) => this.mapGuardJson.set(g.guardId, g));
+    }
+    if (this.mapSiteJson.size == 0 && this.iGuards.length > 0) {
+      this.iSites.forEach((g) => this.mapSiteJson.set(g.siteId, g));
+    }
+  }
+
+  setFrame(date: Date, nDays: number) {
+    this._beginDate = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate()
+    );
+    this._nDays = nDays | 0;
+  }
+
   private _beginDate: Date = new Date();
-  public get beginDate(): Date {
+  get beginDate(): Date {
     return this._beginDate;
   }
-  
-  
-  
+
   private _nDays: number = 7;
   public get nDays(): number {
     return this._nDays;
   }
-
-  
+  get lengthMs(): number {
+    return this.nDays * MS_IN_DAY;
+  }
 
   get endDate(): Date {
     return new Date(this.beginDate.getTime() + this.nDays * MS_IN_DAY);
   }
-  private p2(p: number): string {
-    const str: string = p.toString();
-    return (str.length < 2) ? '0' + str : str;
+  castOffset(offsMs: number) {
+    return offsMs < 0
+      ? 0
+      : offsMs <= this.nDays * MS_IN_DAY
+      ? offsMs
+      : this._nDays * MS_IN_DAY;
   }
-  dateToString(date: Date, withHours: boolean = false): string {
-    let str = `${date.getFullYear()}-${this.p2(date.getMonth() + 1)}-${this.p2(date.getDate())}`;
-    return (withHours) ? str + ` ${this.p2(date.getHours())}:${this.p2(date.getMinutes())}` : str;
-
-  }
-  getMidnight(date: Date): Date {
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
+  hrs2FramePerc(hr: number) {
+    return this.ms2FramePerc(hr * MS_IN_HOUR);
   }
 
-  createWatchPlan(iSite: ISiteJson): IGanttCharRow {
-    let arr: WatchEvent[] = [];
-    //  this.q15plan.fill(0); //
-    const watchStrArr: string[] = iSite.watchStrArr;
-    let dayBeginMs = this.beginDate.getTime();
-    let dow = this.beginDate.getDay();
-    const siteId = iSite.siteId;
+  ms2FramePerc(ms: number): string {
+    const perc = (100 * ms) / (this._nDays * MS_IN_DAY);
+    // debugger;
+    return perc.toFixed(2);
+  }
 
-    for (let index = 0; index < this.nDays; index++, dayBeginMs += MS_IN_DAY) {
-      const midnight = new Date(dayBeginMs);
-      const dow = midnight.getDay();
-      //debugger;
-      const templStr = watchStrArr[dow];
-      const arrTepplStrs = templStr.split(';');
-      arrTepplStrs.forEach(templ => {
-        const w = WatchEvent.fromTemplateString(siteId, midnight, templ);
-        if (!!w)
-          arr.push(w);
-      });
-   
-    }
-    return {
-      siteId: iSite.siteId,
-      name: iSite.name,
-      events: arr,
-      mileStones: []
-    } as IGanttCharRow;
+  date2FramePerc(date: Date): string {
+    const offsMs = this.castOffset(date.getTime() - this._beginDate.getTime());
+    return this.ms2FramePerc(offsMs);
   }
 }
-///////////////////////////////////////////////////////////////////////
-function p2(p: number): string {
-  const str:string =  p.toString();
-  return (str.length < 2) ? '0' + str : str;
-}
-export function  dateToString(date: Date) : string {
-  let str = `${date.getFullYear()}-${p2(date.getMonth() + 1)}-${p2(date.getDate())}`
-  if (date.getHours() != 0 || date.getMinutes() != 0) {
-    str += ` ${p2(date.getHours())}:${p2(date.getMinutes())}`;
-  }
-  return str;
-}
-
+export const Globals = new GlobalsService();

@@ -7,58 +7,43 @@ import {
   OnInit,
 } from '@angular/core';
 import { IDayAxis } from '../../interfaces/day-axis.model';
-import { GlobalsService } from 'src/app/services/globals.service';
-import { MS_IN_DAY } from '../arena';
-import { IGanttCharRow } from './igantt-chart-row.model';
+import { Globals, MS_IN_DAY} from 'src/app/services/globals.service';
+import { IGanttSiteRow } from './igantt-site-row.model';
 import { WatchEvent } from '../../base/watch-event';
 import { TimeHelper } from 'src/app/base/time-helper';
-//import { HEB_DAYS } from 'src/app/base/time-helper';
+import { WatchService } from 'src/app/services/watch.service';
 
-const HEB_DAYS = [
-  'א' + "'",
-  'ב' + "'",
-  'ג' + "'",
-  'ד' + "'",
-  'ה' + "'",
-  'ו' + "'",
-  'שבת',
-];
+
+
 
 @Component({
-  selector: 'app-gantt-chart-control',
-  templateUrl: './gantt-chart-control.component.html',
-  styleUrls: ['./gantt-chart-control.component.scss'],
+  selector: 'app-gantt-control',
+  templateUrl: './gantt-control.component.html',
+  styleUrls: ['./gantt-control.component.scss'],
 })
 export class GanttControlComponent implements OnInit, AfterViewInit {
-  @Input() rows: IGanttCharRow[] = [];
-  @Input() beginDate: Date = this.g.beginDate;
-  @Input() endDate: Date = this.g.endDate;
+  @Input() rows: IGanttSiteRow[] = [];
+  @Input() beginDate: Date = Globals.beginDate;
+  @Input() endDate: Date = Globals.endDate;
   //@ViewChild('dayAxis') dayAxisRef!: ElementRef;
   readonly nDays: number;
   readonly chartLengthMs: number;
   readonly chartBeginMs: number;
   readonly leftTopTitle!: string;
   dayAxis: IDayAxis[];
-  colourPallete = [
-    '#7C4DFF',
-    '#81c784',
-    '#e53935',
-    '#FF8A80',
-    '#303F9F',
-    '#40C4FF',
-    '#006064',
-    '#FF8A65',
-  ];
-
-  constructor(private elRef: ElementRef, readonly g: GlobalsService) {
-    this.nDays = this.g.nDays;
-    this.chartLengthMs = this.nDays * MS_IN_DAY;
-    this.chartBeginMs = this.g.beginDate.getTime();
+ 
+  constructor(
+    private elRef: ElementRef,
+    readonly W: WatchService
+  ) {
+    this.nDays = Globals.nDays;
+    this.chartLengthMs = Globals.nDays * MS_IN_DAY;
+    this.chartBeginMs = Globals.beginDate.getTime();
     this.dayAxis = this.getAxisDays(this.beginDate, this.nDays);
     this.leftTopTitle =
-      TimeHelper.getHebMonthName(this.g.beginDate) +
+      TimeHelper.getHebMonthName(Globals.beginDate) +
       ' ' +
-      this.g.beginDate.getFullYear();
+      Globals.beginDate.getFullYear();
   }
   widthAxisRow: number = 0;
   leftAxisRow: number = 0;
@@ -68,7 +53,7 @@ export class GanttControlComponent implements OnInit, AfterViewInit {
     // debugger;
     if (!!elRef1) {
       this.widthAxisRow = elRef1?.offsetWidth | 0;
-     this.leftAxisRow = elRef1?.offsetLeft | 0;
+      this.leftAxisRow = elRef1?.offsetLeft | 0;
       console.dir('this.widthAxisRow=' + this.widthAxisRow);
     }
   }
@@ -87,7 +72,8 @@ export class GanttControlComponent implements OnInit, AfterViewInit {
   }
 
   async ngOnInit() {
-    this.rows = await this.g.createSitePlanEvents();
+    debugger;
+    this.rows = await this.W.createSiteWatchPlan(this.beginDate,this.nDays);
     console.dir(this.rows);
   }
 
@@ -97,11 +83,11 @@ export class GanttControlComponent implements OnInit, AfterViewInit {
 
     for (
       let index = 0, dayMs = beginDate.getTime();
-      index < this.g.nDays;
+      index < Globals.nDays;
       index++, dayMs += MS_IN_DAY
     ) {
       let day = new Date(dayMs);
-      let dow = HEB_DAYS[day.getDay()];
+      let dow = TimeHelper.getHebDayName(day);
       const _dayName = dow + ' ' + day.getDate();
       dayAxisArr.push({ dayName: _dayName, dayLenPc: _dayLenPc } as IDayAxis);
     }
@@ -117,9 +103,10 @@ export class GanttControlComponent implements OnInit, AfterViewInit {
     const width7 = this.fix2((rect.right - rect.left) * this.nDays);
     console.log(
       //'rect.right=',// rect.right | 0,
-      'leftAxisRow=',this.leftAxisRow|0,
+      'leftAxisRow=',
+      this.leftAxisRow | 0,
       'X',
-      (e.clientX ) | 0,
+      e.clientX | 0,
       'widthN',
       width7,
       // 'left', rect.left | 0,
@@ -138,7 +125,7 @@ export class GanttControlComponent implements OnInit, AfterViewInit {
   }
   onWatchClick(e: any, event: WatchEvent) {
     // console.dir(e);
-      console.dir(event);
+    console.dir(event);
     //console.log('On Watch X', e.clientX, 'Y', e.clientY);
     // clientX: 300,
     // clientY: 500
@@ -163,7 +150,19 @@ export class GanttControlComponent implements OnInit, AfterViewInit {
     // if(this.rows.length < rowIndex) {
     //   return '#64b5f6';
     // }
-    this.ni = ++this.ni % this.colourPallete.length;
-    return this.colourPallete[this.ni];
+    this.ni = ++this.ni % gColourPallete.length;
+    return gColourPallete[this.ni];
   }
 }
+
+
+ const gColourPallete = [
+   '#7C4DFF',
+   '#81c784',
+   '#e53935',
+   '#FF8A80',
+   '#303F9F',
+   '#40C4FF',
+   '#006064',
+   '#FF8A65',
+ ];

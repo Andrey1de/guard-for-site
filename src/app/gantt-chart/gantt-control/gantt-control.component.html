@@ -17,26 +17,26 @@
         <div class="row-title">
             {{row.name}}
         </div>
-        <div class="row-events" >
-                <!-- event period blocks-->
-                <div class="event-period tooltip"
-                 *ngFor="let event of row.events"
-                [style.margin-left]="evOffsetPc(event)+'%'"
-                [style.width]="evDurationPc(event) + '%'" 
-                [style.color]="event.textColor"
-                [style.background]="event.background"
-                [class.free-border] = "event.guardId === 0" 
-                (click)='onWatchClick($event, event)'
+        <div class="row-watches" >
+                <!-- watch period blocks-->
+                <div class="watch-period tooltip"
+                 *ngFor="let watch of row.watches"
+                [style.margin-left]="watch.offsetPerc +'%'"
+                [style.width]="watch.lengthPerc + '%'" 
+                [style.color]="watch.guardTextColor"
+                [style.background]="watch.guardBackground"
+                [class.free-border] = "watch.guardId === 0" 
+                (click)='onWatchClick($event, watch)'
                >
-                    <span class="event-name">{{event.name}}</span>
+                    <span class="watch-name">{{watch.Guard.name}}</span>
                     <div class="tooltip-text">
-                        <div><strong>{{event.background}}: </strong></div>
-                       {{event.beginDate |date:'d-HH:mm'}} - {{event.endDate | date:'d-HH:mm'}}
+                        <div><strong>{{watch.Guard.name}}: </strong></div>
+                       {{watch.beginDate |date:'d-HH:mm'}} - {{watch.endDate | date:'d-HH:mm'}}
                     </div>
             </div>
             
-            <!-- event milestones-->
-            <!-- <div class="event-milestone tooltip" 
+            <!-- watch milestones-->
+            <!-- <div class="watch-milestone tooltip" 
                     *ngFor="let milestone of row.mileStones" 
                     [style.margin-left]="getEventOffsetPercentage(milestone.date)+'%'">
                     <i class="fas fa-star"></i>

@@ -3,18 +3,20 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { GanttChartModule } from './gantt-chart/gantt-chart.module';
+import { GanttControlComponent } from './gantt-chart/gantt-control/gantt-control.component';
+
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    GanttControlComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
-    GanttChartModule
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+

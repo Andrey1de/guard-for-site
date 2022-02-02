@@ -64,7 +64,7 @@ $alternate-row-background-color: #f8f8f0;
       background-color: $title-colum-background;
     }
 
-    .event-period {
+    .watch-period {
       height: 40%;
       position: absolute;
       border-radius: 16px 16px 16px 16px;
@@ -72,7 +72,7 @@ $alternate-row-background-color: #f8f8f0;
       text-align: center;
       
 
-      .event-name {
+      .watch-name {
         
         text-align: center;
         vertical-align: middle;
@@ -81,13 +81,13 @@ $alternate-row-background-color: #f8f8f0;
       }
     }
    
-    .event-milestone {
+    .watch-milestone {
       position: absolute;
       font-size: 0.7rem;
       color: orange;
     }
 
-    .row-events {
+    .row-watches {
       position: relative;
       display: flex;
       align-items: center;
@@ -111,7 +111,7 @@ $alternate-row-background-color: #f8f8f0;
   }
 
   .gantt-chart-row:nth-child(odd) {
-    .row-events {
+    .row-watches {
       background-color: $alternate-row-background-color;
     }
   }
