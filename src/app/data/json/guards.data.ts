@@ -6,7 +6,7 @@ export const MOKGuardsJSon : IGuardJson[]=
 		{
 			"guardId": -1,
 			"manager": "--",
-			"name": "אין פיולות",
+			"name": "לא עובדים",
 			"background": "black",
 			"textColor": "white"
 		},
