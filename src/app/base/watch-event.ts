@@ -1,9 +1,10 @@
 import { IWatchEvent } from '../interfaces/iwatch-event';
 import { IGuardJson } from '../interfaces/iguard-json';
 import { ISiteJson } from '../interfaces/isite-json';
-import {Globals, MS_IN_HOUR, MS_IN_DAY } from '../services/globals.service';
+import { Globals, MS_IN_HOUR, MS_IN_DAY } from '../services/globals.service';
+import { dateToString, TimeHelper } from './time-helper';
 
-export class WatchEvent  {
+export class WatchEvent {
   private static _idS = 0;
 
   //readonly siteId!: number;
@@ -23,7 +24,6 @@ export class WatchEvent  {
   readonly guardBackground: string = 'white';
   readonly guardTextColor: string = 'black';
 
-
   get active(): boolean {
     return this.guardId >= 0;
   }
@@ -40,13 +40,13 @@ export class WatchEvent  {
     this.Guard = Globals.getGuard(guardId);
     this.Site = Globals.getSite(siteId);
     this.beginMs = this.beginDate.getTime();
-    this.lengthMs = this.lengthH - MS_IN_HOUR;
+    this.lengthMs = this.lengthH * MS_IN_HOUR;
     this.endDate = new Date(this.beginMs + this.lengthMs);
 
-    this.offsetPerc =Globals.ms2FramePerc(
-      this.beginMs -Globals.beginDate.getTime()
+    this.offsetPerc = Globals.ms2FramePerc(
+      this.beginMs - Globals.beginDate.getTime()
     );
-    this.lengthPerc =Globals.hrs2FramePerc(this.lengthH);
+    this.lengthPerc = Globals.hrs2FramePerc(this.lengthH);
     this.guardBackground = this.getPlanBackground();
     this.guardTextColor = this.Guard.textColor;
     this.id = id > 0 ? id : (WatchEvent._idS = WatchEvent._idS + 2);
@@ -62,6 +62,13 @@ export class WatchEvent  {
     }
     return this.Guard.background;
     //251, 172, 19
+  }
+
+  get numWatch() {
+    const hr = this.beginDate.getHours();
+    if (hr < 10) return 1; //SkyBlue
+    if (hr < 17) return 2; //Sun;
+    return 3;
   }
 
   private getTextColor(): string {
@@ -86,6 +93,20 @@ export class WatchEvent  {
       event.id
     );
     return ret;
+  }
+  get beginString() {
+    return this.dateToString(this.beginDate, true);
+  }
+  get endString() {
+    return this.dateToString(this.endDate, true);
+  }
+  dateToString(date: Date, isTime: boolean = false): string {
+    let str = `${p2(date.getDate())}`;
+    if (isTime) {
+      //|| date.getHours() != 0 || date.getMinutes() != 0) {
+      str += `.${p2(date.getHours())}:${p2(date.getMinutes())}`;
+    }
+    return str;
   }
 
   // static fromOtrezok(
@@ -132,4 +153,8 @@ export class WatchEvent  {
     }
     return retWatch;
   }
+}
+function p2(p: number): string {
+  const str: string = p.toString();
+  return str.length < 2 ? '0' + str : str;
 }

@@ -7,14 +7,11 @@ import {
   OnInit,
 } from '@angular/core';
 import { IDayAxis } from '../../interfaces/day-axis.model';
-import { Globals, MS_IN_DAY} from 'src/app/services/globals.service';
+import { Globals, MS_IN_DAY } from 'src/app/services/globals.service';
 import { IGanttSiteRow } from './igantt-site-row.model';
 import { WatchEvent } from '../../base/watch-event';
 import { TimeHelper } from 'src/app/base/time-helper';
 import { WatchService } from 'src/app/services/watch.service';
-
-
-
 
 @Component({
   selector: 'app-gantt-control',
@@ -31,11 +28,8 @@ export class GanttControlComponent implements OnInit, AfterViewInit {
   readonly chartBeginMs: number;
   readonly leftTopTitle!: string;
   dayAxis: IDayAxis[];
- 
-  constructor(
-    private elRef: ElementRef,
-    readonly W: WatchService
-  ) {
+
+  constructor(private elRef: ElementRef, readonly W: WatchService) {
     this.nDays = Globals.nDays;
     this.chartLengthMs = Globals.nDays * MS_IN_DAY;
     this.chartBeginMs = Globals.beginDate.getTime();
@@ -72,8 +66,8 @@ export class GanttControlComponent implements OnInit, AfterViewInit {
   }
 
   async ngOnInit() {
-    debugger;
-    this.rows = await this.W.createSiteWatchPlan(this.beginDate,this.nDays);
+    //debugger;
+    this.rows = await this.W.createSiteWatchPlan(this.beginDate, this.nDays);
     console.dir(this.rows);
   }
 
@@ -131,18 +125,20 @@ export class GanttControlComponent implements OnInit, AfterViewInit {
     // clientY: 500
     e.preventDefault();
   }
-  evDurationPc(event: WatchEvent): string {
-    const durPc = 100 * (event.lengthMs / this.chartLengthMs);
-    return durPc.toFixed(2);
-  }
+  // evDurationPc(event: WatchEvent): string {
+  //   const durPc = Globals.ms2FramePerc(event.lengthMs);//100 * (event.lengthMs / this.chartLengthMs);
+  //   // return durPc.toFixed(2);
+  //   return  "10";//.toString();
+  // }
 
-  evOffsetPc(event: WatchEvent): string {
-    // debugger;
-    let offsPc =
-      (100 * (event.beginMs - this.chartBeginMs)) / this.chartLengthMs;
+  // evOffsetPc(event: WatchEvent): string {
+  //   // debugger;
+  //   let offsPc = Globals.ms2OffsetPerc(event.beginMs);
+  //   console.log(offsPc,event.beginMs, Globals.beginDateMs);
+  //   //   (100 * (event.beginMs - this.chartBeginMs)) / this.chartLengthMs;
 
-    return offsPc.toFixed(2);
-  }
+  //   return offsPc;
+  // }
 
   private ni = -1;
 
@@ -155,14 +151,13 @@ export class GanttControlComponent implements OnInit, AfterViewInit {
   }
 }
 
-
- const gColourPallete = [
-   '#7C4DFF',
-   '#81c784',
-   '#e53935',
-   '#FF8A80',
-   '#303F9F',
-   '#40C4FF',
-   '#006064',
-   '#FF8A65',
- ];
+const gColourPallete = [
+  '#7C4DFF',
+  '#81c784',
+  '#e53935',
+  '#FF8A80',
+  '#303F9F',
+  '#40C4FF',
+  '#006064',
+  '#FF8A65',
+];

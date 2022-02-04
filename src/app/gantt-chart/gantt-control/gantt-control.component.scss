@@ -2,7 +2,7 @@ $header-background-color: #BDBDBD;
 $header-border: solid white;
 $title-row-width: 10rem;
 $title-colum-background: #f5f5f5;
-$font-size: 0.8rem;
+$font-size: 1.2rem;
 $border: 1px solid #c8c8c8;
 $border: 1px solid #c8c8c8;
 $free-border : 2px dotted red;
@@ -56,7 +56,7 @@ $alternate-row-background-color: #f8f8f0;
 
     .row-title {
       font-weight: bold;
-      font-size: 1.2rem;
+      font-size: $font-size;
       width: $title-row-width;
       border-right: $border;
       text-align: right;
@@ -67,16 +67,16 @@ $alternate-row-background-color: #f8f8f0;
     .watch-period {
       height: 40%;
       position: absolute;
-      border-radius: 16px 16px 16px 16px;
-
+      border-radius: 12px ;
+ vertical-align: middle;
       text-align: center;
       
 
       .watch-name {
         
         text-align: center;
-        vertical-align: middle;
-        font-size: 0.6rem;
+        vertical-align: top;
+        font-size: 0.8rem;
         font-weight: bold;
       }
     }

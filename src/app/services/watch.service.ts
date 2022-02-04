@@ -26,7 +26,6 @@ export class WatchService {
     IGanttSiteRow
   >();
 
-
   constructor() {}
 
   //ATN To read firmware data - site and guards with transferring them to map
@@ -36,14 +35,20 @@ export class WatchService {
     Globals.setFrame(midnight, nDays);
   }
 
-  async createSiteWatchPlan(day: Date, nDays: number): 
-    Promise<IGanttSiteRow[]> {
+  async createSiteWatchPlan(
+    day: Date,
+    nDays: number
+  ): Promise<IGanttSiteRow[]> {
     this.setFrame(day, nDays);
     this.mapSiteWatches.clear();
     const iSitesArr = [...Globals.mapSiteJson.values()];
 
     iSitesArr.forEach((iSite) => {
-      const row = this.createOneSiteWatchPlan(this.beginDate, this.nDays, iSite);
+      const row = this.createOneSiteWatchPlan(
+        this.beginDate,
+        this.nDays,
+        iSite
+      );
       if (!!row) {
         this.mapSiteWatches.set(iSite.siteId, row);
       }
@@ -83,6 +88,20 @@ export class WatchService {
       mileStones: [],
     } as IGanttSiteRow;
   }
+  // evDurationPc(event: WatchEvent): string {
+  //   const durPc = Globals.ms2FramePerc(event.lengthMs); //100 * (event.lengthMs / this.chartLengthMs);
+  //   // return durPc.toFixed(2);
+  //   return '10'; //.toString();
+  // }
+
+  // evOffsetPc(event: WatchEvent): string {
+  //   // debugger;
+  //   let offsPc = Globals.ms2OffsetPerc(event.beginMs);
+  //   console.log(offsPc, event.beginMs, Globals.beginDateMs);
+  //   //   (100 * (event.beginMs - this.chartBeginMs)) / this.chartLengthMs;
+
+  //   return offsPc;
+  // }
 
   // createDayWatchPlan(midnight: Date ,iSite: ISiteJson): IGanttSiteRow {
   //     let arr: WatchEvent[] = [];
@@ -120,3 +139,4 @@ export function dateToString(date: Date): string {
   }
   return str;
 }
+

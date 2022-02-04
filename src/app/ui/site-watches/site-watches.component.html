@@ -1,0 +1,65 @@
+<div class="containr">
+
+<table style="width:80%">
+  <tr>
+    <th  style="width:25%" class="row-title"> wrbtrb</th>
+    <th  *ngFor="let day of dayAxis"
+            [style.width]="day.dayLenPc + '%'"> 
+            {{day.dayName}}
+    </th>
+      
+  </tr>
+  <tr>
+  	<td class="row-title">{{leftTopTitle}}</td>
+  	
+    <td [attr.colspan]="nDays" *ngFor="let row of rows; let i = index"> 
+		<div class="row-container">
+			
+				<!-- <div class="row-grid" 
+				style="margin-left: 33.3%;margin-right: 33.3%"></div>
+				<div class="row-grid" 
+				style="margin-left: 66.6%;margin-right: 66.6%"></div> -->
+			<div class="watch-event tooltip"
+                 *ngFor="let watch of row.watches"
+                [style.margin-left]="watch.offsetPerc +'%'"
+                [style.margin-right]="watch.offsetPerc +'%'"
+                [style.width]="watch.lengthPerc + '%'" 
+                [style.color]="watch.guardTextColor"
+                [style.background]="watch.guardBackground"
+                [class.free-border] = "watch.guardId === 0" 
+                
+               >
+                    <span class="watch-name">{{watch.Guard.name}}</span>
+                    <div class="tooltip-text">
+                        <div><strong>{{watch.Guard.name}}: </strong></div>
+                       {{watch.beginDate |date:'d-HH:mm'}} - {{watch.endDate | date:'d-HH:mm'}}
+                    </div>
+            </div>
+				<div class="watch-event" 
+					style="margin-left: 10%;margin-right: 10%;
+					width:25%;
+					background-color: rgba(255,0,0,0.8);">
+					 8 משה ק 
+				</div>
+
+				<!-- <div class="watch-event" 
+					style="margin-left: 40%;margin-right: 40%;
+							width:30%;background-color: rgba(0,0,255,0.8);">
+					12 אנדרי
+					</div>
+ -->
+	   
+			
+		</div>
+   
+    </td>
+   
+  </tr>
+ 
+
+</table>
+
+
+
+</div>
+

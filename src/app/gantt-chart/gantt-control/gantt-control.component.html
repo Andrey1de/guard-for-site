@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" style="direction: rtl;">
 
     <!-- header row-->
     <div class="row-axis">
@@ -19,19 +19,41 @@
         </div>
         <div class="row-watches" >
                 <!-- watch period blocks-->
-                <div class="watch-period tooltip"
+            <div class="watch-period tooltip"
                  *ngFor="let watch of row.watches"
                 [style.margin-left]="watch.offsetPerc +'%'"
+               [style.margin-right]="watch.offsetPerc +'%'"
                 [style.width]="watch.lengthPerc + '%'" 
                 [style.color]="watch.guardTextColor"
                 [style.background]="watch.guardBackground"
+                
                 [class.free-border] = "watch.guardId === 0" 
                 (click)='onWatchClick($event, watch)'
                >
-                    <span class="watch-name">{{watch.Guard.name}}</span>
-                    <div class="tooltip-text">
+                    
+                    <span class="watch-name" 
+                        *ngIf="watch.guardId === 0 && watch.numWatch === 1"> 
+                    
+                        {{watch.lengthH + ' '}}<i class="fas fa-dove" ></i>
+                    </span> 
+                   <span class="watch-name" 
+                        *ngIf="watch.guardId === 0 && watch.numWatch === 2"> 
+                    
+                        {{watch.lengthH + ' '}}<i class="fas fa-sun" ></i>
+                    </span> 
+                   <span class="watch-name" 
+                        *ngIf="watch.guardId === 0 && watch.numWatch === 3"> 
+                    
+                        {{watch.lengthH + ' '}}<i class="fas fa-moon" ></i>
+                    </span> 
+                    <span class="watch-name" *ngIf="watch.guardId  === -1"> 
+                        {{watch.lengthH + ' '}}<i class="fas fa-window-close"></i> 
+                     </span>
+                  
+                    <div class="tooltip-text" style="font-size:0.8rem">
                         <div><strong>{{watch.Guard.name}}: </strong></div>
-                       {{watch.beginDate |date:'d-HH:mm'}} - {{watch.endDate | date:'d-HH:mm'}}
+                        <div style="direction:ltr" >{{watch.beginString}} - {{watch.endString}}</div>
+                       
                     </div>
             </div>
             
