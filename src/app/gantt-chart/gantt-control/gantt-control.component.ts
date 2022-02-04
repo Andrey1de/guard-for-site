@@ -8,10 +8,10 @@ import {
 } from '@angular/core';
 import { IDayAxis } from '../../interfaces/day-axis.model';
 import { Globals, MS_IN_DAY } from 'src/app/services/globals.service';
-import { IGanttSiteRow } from './igantt-site-row.model';
 import { WatchEvent } from '../../base/watch-event';
 import { TimeHelper } from 'src/app/base/time-helper';
 import { WatchService } from 'src/app/services/watch.service';
+import { ISiteWatchesRow } from 'src/app/ui/isite-watches-row';
 
 @Component({
   selector: 'app-gantt-control',
@@ -19,7 +19,7 @@ import { WatchService } from 'src/app/services/watch.service';
   styleUrls: ['./gantt-control.component.scss'],
 })
 export class GanttControlComponent implements OnInit, AfterViewInit {
-  @Input() rows: IGanttSiteRow[] = [];
+  @Input() rows: ISiteWatchesRow[] = [];
   @Input() beginDate: Date = Globals.beginDate;
   @Input() endDate: Date = Globals.endDate;
   //@ViewChild('dayAxis') dayAxisRef!: ElementRef;

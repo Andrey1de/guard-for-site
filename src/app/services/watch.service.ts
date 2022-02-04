@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { TimeHelper } from '../base/time-helper';
 import { WatchEvent } from '../base/watch-event';
-import { IGanttSiteRow } from '../gantt-chart/gantt-control/igantt-site-row.model';
 import { ISiteJson } from '../interfaces/isite-json';
+import { ISiteWatchesRow } from '../ui/isite-watches-row';
 //import { IGanttSiteRow } from '../ui/isite-watches-row';
 import { Globals , MS_IN_DAY, MS_IN_HOUR } from './globals.service';
 
@@ -21,9 +21,9 @@ export class WatchService {
     return Globals.endDate;
   }
 
-  readonly mapSiteWatches: Map<number, IGanttSiteRow> = new Map<
+  readonly mapSiteWatches: Map<number, ISiteWatchesRow> = new Map<
     number,
-    IGanttSiteRow
+    ISiteWatchesRow
   >();
 
   constructor() {}
@@ -38,7 +38,7 @@ export class WatchService {
   async createSiteWatchPlan(
     day: Date,
     nDays: number
-  ): Promise<IGanttSiteRow[]> {
+  ): Promise<ISiteWatchesRow[]> {
     this.setFrame(day, nDays);
     this.mapSiteWatches.clear();
     const iSitesArr = [...Globals.mapSiteJson.values()];
@@ -60,7 +60,7 @@ export class WatchService {
     midnight: Date,
     nDays: number,
     iSite: ISiteJson
-  ): IGanttSiteRow | undefined {
+  ): ISiteWatchesRow | undefined {
     let arr: WatchEvent[] = [];
     const watchStrArr: string[] = iSite.watchStrArr;
     if (!Array.isArray(watchStrArr) || watchStrArr.length < 7) {
@@ -86,7 +86,7 @@ export class WatchService {
       name: iSite.name,
       watches: arr,
       mileStones: [],
-    } as IGanttSiteRow;
+    } as ISiteWatchesRow;
   }
   // evDurationPc(event: WatchEvent): string {
   //   const durPc = Globals.ms2FramePerc(event.lengthMs); //100 * (event.lengthMs / this.chartLengthMs);

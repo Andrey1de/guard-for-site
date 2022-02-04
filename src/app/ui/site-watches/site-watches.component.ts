@@ -7,7 +7,6 @@ import {
   OnInit,
 } from '@angular/core';
 import { TimeHelper } from 'src/app/base/time-helper';
-import { IGanttSiteRow } from 'src/app/gantt-chart/gantt-control/igantt-site-row.model';
 import { IDayAxis } from 'src/app/interfaces/day-axis.model';
 import { Globals, MS_IN_DAY } from 'src/app/services/globals.service';
 import { WatchService } from 'src/app/services/watch.service';
@@ -19,7 +18,7 @@ import { ISiteWatchesRow } from '../isite-watches-row';
   styleUrls: ['./site-watches.component.scss'],
 })
 export class SiteWatchesComponent implements OnInit, AfterViewInit {
-  @Input() rows: IGanttSiteRow[] = []; //Don't forget to
+  @Input() rows: ISiteWatchesRow[] = []; //Don't forget to
   @Input() beginDate: Date = Globals.beginDate;
   @Input() endDate: Date = Globals.endDate;
   //@ViewChild('dayAxis') dayAxisRef!: ElementRef;
@@ -27,6 +26,8 @@ export class SiteWatchesComponent implements OnInit, AfterViewInit {
   readonly chartLengthMs: number;
   readonly chartBeginMs: number;
   readonly leftTopTitle!: string;
+  readonly titleLenPc: string = '20.0';
+  readonly gridLinesPcArr: string[] = [];
   dayAxis: IDayAxis[];
   constructor(private elRef: ElementRef, readonly W: WatchService) {
     this.nDays = Globals.nDays;
@@ -37,8 +38,19 @@ export class SiteWatchesComponent implements OnInit, AfterViewInit {
       TimeHelper.getHebMonthName(Globals.beginDate) +
       ' ' +
       Globals.beginDate.getFullYear();
+    this.gridLinesPcArr = this.createGidArr();
   }
+  createGidArr(): string[] {
+    let arr: string[] = [];
+    for (let index = 1; index < this.nDays; index++) {
+      const beg = (100 * index) / this.nDays;
+      arr.push(beg.toFixed(2));
+    }
+    return arr;
+  }
+  onWatchClick($event:any, watch: any){
 
+  }
   async ngOnInit() {
     //debugger;
     this.rows = await this.W.createSiteWatchPlan(this.beginDate, this.nDays);
@@ -47,7 +59,8 @@ export class SiteWatchesComponent implements OnInit, AfterViewInit {
 
   getAxisDays(beginDate: Date, nDays: number): IDayAxis[] {
     let dayAxisArr: IDayAxis[] = new Array<IDayAxis>();
-    const _dayLenPc = +(100 / this.nDays).toFixed(2);
+    const titleLen: number = +this.titleLenPc;
+    const _dayLenPc = +((100.0 - titleLen) / this.nDays).toFixed(2);
 
     for (
       let index = 0, dayMs = beginDate.getTime();

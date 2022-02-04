@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { IGanttSiteRow } from './gantt-chart/gantt-control/igantt-site-row.model';
 import { Globals } from './services/globals.service';
 import { WatchService } from './services/watch.service';
+import { ISiteWatchesRow } from './ui/isite-watches-row';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +10,7 @@ import { WatchService } from './services/watch.service';
 })
 export class AppComponent {
   title = 'guard-for-site';
-  rows: IGanttSiteRow[] = [];
+  rows: ISiteWatchesRow[] = [];
   constructor(readonly W: WatchService) {
     this.rows = [];
     this.initGlobal();
