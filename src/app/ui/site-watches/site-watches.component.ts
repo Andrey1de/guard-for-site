@@ -21,6 +21,7 @@ export class SiteWatchesComponent implements OnInit, AfterViewInit {
   @Input() rows: ISiteWatchesRow[] = []; //Don't forget to
   @Input() beginDate: Date = Globals.beginDate;
   @Input() endDate: Date = Globals.endDate;
+  @Input() isHebrew: boolean = true;
   //@ViewChild('dayAxis') dayAxisRef!: ElementRef;
   readonly nDays: number;
   readonly chartLengthMs: number;
@@ -48,9 +49,13 @@ export class SiteWatchesComponent implements OnInit, AfterViewInit {
     }
     return arr;
   }
-  onWatchClick($event:any, watch: any){
-
+  direction(): string {
+    return this.isHebrew ? 'rtl' : 'ltr';
   }
+  localAlign(): string {
+    return this.isHebrew ? 'right' : 'left';
+  }
+  onWatchClick($event: any, watch: any) {}
   async ngOnInit() {
     //debugger;
     this.rows = await this.W.createSiteWatchPlan(this.beginDate, this.nDays);

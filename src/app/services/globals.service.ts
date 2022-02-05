@@ -20,6 +20,7 @@ export class GlobalsService {
 
   private iSites: ISiteJson[] = []; //MokSitesJSon;
   private iGuards: IGuardJson[] = []; //MOKGuardsJSon;
+  public Direction : string = 'ltr';
 
   constructor() {
     GlobalsService._Global = this;
