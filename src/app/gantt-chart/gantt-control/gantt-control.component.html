@@ -19,7 +19,9 @@
         </div>
         <div class="row-watches" >
                 <!-- watch period blocks-->
-          <div class="watch-period tooltip"
+
+            
+          <div class="watch-event tooltip"
                  *ngFor="let watch of row.watches"
                 [style.margin-left]="watch.offsetPerc +'%'"
                 [style.margin-right]="watch.offsetPerc +'%'"
@@ -55,9 +57,7 @@
                         <div style="direction:ltr" >{{watch.beginString}} - {{watch.endString}}</div>
                        
                     </div>
-            </div>
-            
-            <!-- watch milestones-->
+            </div>            <!-- watch milestones-->
             <!-- <div class="watch-milestone tooltip" 
                     *ngFor="let milestone of row.mileStones" 
                     [style.margin-left]="getEventOffsetPercentage(milestone.date)+'%'">
