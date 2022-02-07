@@ -33,7 +33,8 @@ export class GlobalsService {
         siteId: siteId,
         name: 'SITE ERROR',
         address: '',
-        watchStrArr: [],
+        //  watchStrArr: [],
+        watchPlan:  [],
       } as ISiteJson)
     );
   }

@@ -5,7 +5,11 @@ export interface ISiteJson {
     phone?: string;
     
        //name: string;
-    watchStrArr: string[];
+   // watchStrArr: string[];
+    watchPlan:number[][];
+
+
+
     //mileStones: IGanttChartMileStone[];
 };
  

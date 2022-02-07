@@ -4,7 +4,7 @@ import { WatchEvent } from '../base/watch-event';
 import { ISiteJson } from '../interfaces/isite-json';
 import { ISiteWatchesRow } from '../ui/isite-watches-row';
 //import { IGanttSiteRow } from '../ui/isite-watches-row';
-import { Globals , MS_IN_DAY, MS_IN_HOUR } from './globals.service';
+import { Globals, MS_IN_DAY, MS_IN_HOUR } from './globals.service';
 
 @Injectable({
   providedIn: 'root',
@@ -55,6 +55,7 @@ export class WatchService {
     });
     return [...this.mapSiteWatches.values()];
   }
+  
 
   protected createOneSiteWatchPlan(
     midnight: Date,
@@ -62,24 +63,48 @@ export class WatchService {
     iSite: ISiteJson
   ): ISiteWatchesRow | undefined {
     let arr: WatchEvent[] = [];
-    const watchStrArr: string[] = iSite.watchStrArr;
-    if (!Array.isArray(watchStrArr) || watchStrArr.length < 7) {
+    const watchPlan: number[][] = iSite.watchPlan;
+    if (!Array.isArray(watchPlan) || watchPlan.length !== 7) {
       return undefined;
     }
 
-    let dayBeginMs = midnight.getTime();
-    const siteId = iSite.siteId;
+    let midnightMs = midnight.getTime();
+    // const siteId = iSite.siteId;
 
-    for (let index = 0; index < nDays; index++, dayBeginMs += MS_IN_DAY) {
-      const midnight = new Date(dayBeginMs);
-      const dow = midnight.getDay();
-      //debugger;
-      const templStr = watchStrArr[dow];
-      const arrTepplStrs = templStr.split(';');
-      arrTepplStrs.forEach((templ) => {
-        const w = WatchEvent.fromTemplateString(siteId, midnight, templ);
-        if (!!w) arr.push(w);
-      });
+    for (
+      let nDay = 0, dow = midnight.getDay();
+      nDay < nDays;
+      nDay++, dow = ++dow % 7, midnightMs += MS_IN_DAY
+    ) {
+      //let dowNext = (dow + 1) % 7;
+      const planArr: number[] = watchPlan[dow];
+      const planArrNext: number[] = watchPlan[(dow + 1) % 7];
+      //Number of watches must been at least 2 !!!!
+
+      if (planArr.length > 1) {
+        const nMax = planArr.length;
+        let nextDbl = planArr[0];
+        let absNext = Math.abs(nextDbl);
+
+        for (let nWatch = 1; nWatch <= nMax; nWatch++) {
+          let begtDbl = absNext;
+          let guardId = nextDbl > 0 ? 0 : -1;
+          nextDbl = nWatch < nMax ? planArr[nWatch] : planArrNext[0];
+          absNext = Math.abs(nextDbl);
+          let lengthH = absNext - begtDbl;
+          if (lengthH < 0) lengthH += 24;
+          const beginDate = new Date(midnightMs + begtDbl * MS_IN_HOUR);
+          const watchEvent = new WatchEvent(
+            iSite.siteId,
+            guardId,
+            beginDate,
+            lengthH,
+            -1 // to generate
+          );
+
+          arr.push(watchEvent);
+        }
+      }
     }
     return {
       siteId: iSite.siteId,
@@ -139,4 +164,3 @@ export function dateToString(date: Date): string {
   }
   return str;
 }
-

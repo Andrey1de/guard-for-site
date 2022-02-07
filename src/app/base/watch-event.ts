@@ -5,7 +5,7 @@ import { Globals, MS_IN_HOUR, MS_IN_DAY } from '../services/globals.service';
 import { dateToString, TimeHelper } from './time-helper';
 
 export class WatchEvent {
-  private static _idS = 0;
+  private static _idS = 10000;
 
   //readonly siteId!: number;
 
@@ -35,7 +35,7 @@ export class WatchEvent {
     readonly guardId: number,
     readonly beginDate: Date,
     readonly lengthH: number,
-    readonly id: number = -1
+    readonly id: number = 0
   ) {
     this.Guard = Globals.getGuard(guardId);
     this.Site = Globals.getSite(siteId);
@@ -49,7 +49,7 @@ export class WatchEvent {
     this.lengthPerc = Globals.hrs2FramePerc(this.lengthH);
     this.guardBackground = this.getPlanBackground();
     this.guardTextColor = this.Guard.textColor;
-    this.id = id > 0 ? id : (WatchEvent._idS = WatchEvent._idS + 2);
+    this.id = id >= 0 ? id : (WatchEvent._idS = WatchEvent._idS + 2);
   }
 
   private getPlanBackground(): string {
@@ -108,51 +108,21 @@ export class WatchEvent {
     }
     return str;
   }
-
-  // static fromOtrezok(
-  //   siteId: number,
-  //   beginDate: Date,
-  //   lengthH: number,
-  //   name: string,
-  //   guardId: number = 0
-  // ): WatchEvent {
-  //   let endDate = new Date(beginDate.getTime() + lengthH * MS_IN_HOUR);
-
-  //   return new WatchEvent(siteId, beginDate, endDate, name, guardId);
-  // }
-
-  //"-06:00+12"
-  static fromTemplateString(
-    siteId: number,
-    midNight: Date,
-    templStr: string
-  ): WatchEvent | undefined {
-    let retWatch: WatchEvent | undefined;
-    try {
-      //"-06:00+12;18:00+12"
-      const b = templStr[0];
-      let active = (b >= '0' && b <= '9') || b == '+';
-      if (!active) templStr = templStr.substring(1);
-      const arr = templStr.split(/[:+]+/);
-
-      if (arr.length >= 3) {
-        const begRet = new Date(
-          midNight.getFullYear(),
-          midNight.getMonth(),
-          midNight.getDate(),
-          +arr[0],
-          +arr[1]
-        );
-
-        const lengthH = +arr[2];
-
-        retWatch = new WatchEvent(siteId, active ? 0 : -1, begRet, lengthH);
-      }
-    } catch (error) {
-      return undefined;
-    }
-    return retWatch;
+  // siteId: number; // "2";
+  // guardId: number; // "101";
+  // begin: Date; // new Date(beginS * 1000) from 2022-01-01
+  // end?: Date;
+  // lengthH: number;
+  //  id,siteId,begin,lengthH,guardId
+  // 1,-1,2022-01-02 14:30,8.0
+  // 0,1,-1,2022-01-02 14:30,8.0,2022-01-02 22:30
+  toCsvString() {
+    const beginDate = this.dateToString(this.beginDate, true);
+    const { id, siteId, lengthH, guardId } = this;
+    return `${id},${siteId},${beginDate},${lengthH.toFixed(2)},${guardId}`;
   }
+
+ 
 }
 function p2(p: number): string {
   const str: string = p.toString();
