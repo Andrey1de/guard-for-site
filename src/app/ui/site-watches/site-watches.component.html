@@ -25,7 +25,7 @@
             [style.margin-left]="gridPc +'%'"
             [style.margin-right]="gridPc +'%'" > 
           </div>
-          <div class="watch-event tooltip"
+          <div class="watch-event s-tooltip"
             *ngFor="let watch of row.watches"
             [style.margin-left]="watch.offsetPerc +'%'"
             [style.margin-right]="watch.offsetPerc +'%'"
@@ -56,7 +56,7 @@
             <span class="watch-name" *ngIf="watch.guardId  === -1"> 
                 {{watch.lengthH + ' '}}<i class="fas fa-window-close"></i> 
             </span>
-            <div class="tooltip-text" >
+            <div class="s-tooltip-text" >
                   <div><strong>{{watch.Guard.name}}: </strong></div>
                   <div style="direction:ltr" >{{watch.beginString}} - {{watch.endString}}</div>
                       
