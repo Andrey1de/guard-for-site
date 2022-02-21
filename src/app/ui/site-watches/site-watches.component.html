@@ -20,11 +20,15 @@
       <td [attr.colspan]="nDays" > 
     
         <div class="row-watches">
-          <div class="grid-lines"  
+          <div class="row" style="width:100%;margin: 0;">
+            <div class="col" *ngFor="let day of dayAxis"> 
+            </div>
+          </div>
+          <!-- <div class="grid-lines"  
             *ngFor="let gridPc of gridLinesPcArr"
             [style.margin-left]="gridPc +'%'"
             [style.margin-right]="gridPc +'%'" > 
-          </div>
+          </div> -->
           <div class="watch-event s-tooltip"
             *ngFor="let watch of row.watches"
             [style.margin-left]="watch.offsetPerc +'%'"
