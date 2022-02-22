@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { dateToString, TimeHelper } from './base/time-helper';
+import { Component, OnInit } from '@angular/core';
+import { TimeHelper } from './base/time-helper';
+import { IWatchCsv, saveCsvFile$ } from './interfaces/iwatch-csv';
 import { Globals } from './services/globals.service';
 import { WatchService } from './services/watch.service';
 import { ISiteWatchesRow } from './ui/isite-watches-row';
@@ -9,7 +10,7 @@ import { ISiteWatchesRow } from './ui/isite-watches-row';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'guard-for-site';
   model: any;
   rows: ISiteWatchesRow[] = [];
@@ -17,36 +18,50 @@ export class AppComponent {
 
   constructor(readonly W: WatchService) {
     this.rows = [];
-    this.strDate = dateToString(TimeHelper.getMidnight(new Date()), true);
+    this.strDate = TimeHelper.dateToString(new Date(), false);
+
     this.initGlobal();
     //this.createYearPlan();
   }
 
-  async createPlan(strBegin: string, nDays: number) {
-    const arr = (this.rows = await this.W.createSiteWatchPlan(
-      new Date(strBegin),
-      nDays
-    ));
-    return arr;
+  ngOnInit(): void {
+    //throw new Error('Method not implemented.');
   }
+  arrWatchCsv: IWatchCsv[] = [];
+  createCsvArray() {
+    debugger;
+    this.arrWatchCsv = [];
+    this.arrWatchCsv = this.W.create2022Csv('2022-02-01', 366 - 58);
+  }
+
+  async saveCsvFile() {
+    await saveCsvFile$(this.arrWatchCsv, 'iwatch-csv.csv');
+  }
+  // async createPlan(
+  //   strBegin: string,
+  //   nDays: number
+  // ): Promise<ISiteWatchesRow[]> {
+  //   const arr = []; //(this.rows = await this.W.createSiteWatchPlan(
+  //   //   new Date(strBegin),
+  //   //   nDays
+  //   // ));
+  //   return arr;
+  // }
 
   async initGlobal() {
     // debugger;
     // this.rows = await this.G.createSitePlanEvents();
   }
-  
-  
-  async callPlan() {
-    let strOut = [];
-    const arr = await this.createPlan('2022-02-01', 30);
-    arr.forEach(site=>{
-      site.watches.forEach(w=> strOut.push(w.toCsvString()))
-       
 
-    })
+  // async callPlan() {
+  //   let strOut = [];
+  //   const arr = await this.createPlan('2022-02-01', 30);
+  //   arr.forEach((site) => {
+  //     site.watches.forEach((w) => strOut.push(w.toCsvString()));
+  //   });
 
-    debugger;
-  }
+  //   debugger;
+  // }
   go() {
     debugger;
     Globals.setFrame(new Date('2022-02-01'), 4);
@@ -78,3 +93,4 @@ var download_json_using_blob = function (fileName: string, content: any) {
   a.remove();
   // }
 };
+

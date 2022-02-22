@@ -1221,6 +1221,11 @@
   resolved "https://registry.yarnpkg.com/@jridgewell/resolve-uri/-/resolve-uri-1.0.0.tgz#3fdf5798f0b49e90155896f6291df186eac06c83"
   integrity sha512-9oLAnygRMi8Q5QkYEU4XWK04B+nuoXoxjRvRxgjuChkLZFBja0YPSgdZ7dZtwhncLBcQe/I/E+fLuk5qxcYVJA==
 
+"@molteni/export-csv@^0.0.8":
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@molteni/export-csv/-/export-csv-0.0.8.tgz#79f79c1a3deea22bba934d49a3cf520c23224566"
+  integrity sha512-4YrZ9C+HczsYIKTiCTgbKapliCH7I9QYJxDX25ZNq3xRFezidtQp+W+9/Bh/6Q4SY2kxjcTqyMUGJ+PTdGUMJA==
+
 "@ng-bootstrap/ng-bootstrap@^11.0.0":
   version "11.0.0"
   resolved "https://registry.yarnpkg.com/@ng-bootstrap/ng-bootstrap/-/ng-bootstrap-11.0.0.tgz#16855620bff7ab7b965d4f49907c44b0f5bd5020"

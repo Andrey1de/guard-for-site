@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { TimeHelper } from '../base/time-helper';
 import { WatchEvent } from '../base/watch-event';
 import { ISiteJson } from '../interfaces/isite-json';
+import { daySiteWatchesCsv, IWatchCsv } from '../interfaces/iwatch-csv';
 import { ISiteWatchesRow } from '../ui/isite-watches-row';
 //import { IGanttSiteRow } from '../ui/isite-watches-row';
 import { Globals, MS_IN_DAY, MS_IN_HOUR } from './globals.service';
@@ -34,6 +35,22 @@ export class WatchService {
     //TBD if this G;obal set is Need?
     Globals.setFrame(midnight, nDays);
   }
+  create2022Csv(beginDateStr: string, nDays: number = 100): IWatchCsv[] {
+    let midnight = TimeHelper.getMidnight(new Date(beginDateStr));
+    let arr: IWatchCsv[] = [];
+
+    const sites = [...Globals.mapSiteJson.values()];
+    for (let nDay = 0; nDay < nDays; nDay++, midnight) {
+      for (const site of sites) {
+        const arr1 = daySiteWatchesCsv(midnight, site);
+        if (arr1.length > 0) {
+          arr = [...arr, ...arr1];
+        }
+      }
+      midnight = TimeHelper.addDays(midnight, 1);
+    }
+    return arr;
+  }
 
   async createSiteWatchPlan(
     day: Date,
@@ -55,7 +72,6 @@ export class WatchService {
     });
     return [...this.mapSiteWatches.values()];
   }
-  
 
   protected createOneSiteWatchPlan(
     midnight: Date,

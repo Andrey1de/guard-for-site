@@ -1,10 +1,15 @@
+import { TimeHelper } from '../base/time-helper';
 import { MOKGuardsJSon } from '../data/json/guards.data';
 import { MokSitesJSon } from '../data/json/sites.data';
 import { IGuardJson } from '../interfaces/iguard-json';
 import { ISiteJson } from '../interfaces/isite-json';
 export const MS_IN_HOUR = 3600 * 1000;
 export const MS_IN_DAY = MS_IN_HOUR * 24;
-//export
+export enum DayPart {
+  Morning = 1,
+  Noon = 2,
+  Night = 3,
+};
 
 export class GlobalsService {
   static _Global: GlobalsService;
@@ -20,7 +25,7 @@ export class GlobalsService {
 
   private iSites: ISiteJson[] = []; //MokSitesJSon;
   private iGuards: IGuardJson[] = []; //MOKGuardsJSon;
-  public Direction : string = 'ltr';
+  public Direction: string = 'ltr';
 
   constructor() {
     GlobalsService._Global = this;
@@ -34,7 +39,7 @@ export class GlobalsService {
         name: 'SITE ERROR',
         address: '',
         //  watchStrArr: [],
-        watchPlan:  [],
+        watchPlan: [],
       } as ISiteJson)
     );
   }
@@ -65,11 +70,7 @@ export class GlobalsService {
   }
 
   setFrame(date: Date, nDays: number) {
-    this._beginDate = new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate()
-    );
+    this._beginDate = TimeHelper.getMidnight(date)
     this._nDays = nDays | 0;
   }
 

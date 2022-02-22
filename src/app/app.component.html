@@ -1,15 +1,16 @@
 <label for="meeting-time">Choose a time for your appointment:</label>
 
 <input [(ngModel)]="strDate "type="datetime-local" id="meeting-time"
-       name="meeting-time" 
-     > 
+       name="meeting-time" > 
      <span >{{strDate}}</span>
 
 
-<button type="button" class="btn btn-info" (click)="go()">GO</button>
+<button type="button" class="btn btn-info" (click)="createCsvArray()">2022 Csv</button>
 <br>
-<button type="button" class="btn btn-secondary" (click)="callPlan()">Create Plan</button>
-<app-site-watches></app-site-watches> 
+ <strong>arrWatchCsv.length:{{arrWatchCsv.length}}</strong>
+<br>
+<button type="button" class="btn btn-secondary" (click)="saveCsvFile()">SaveFile</button>
+<!-- <app-site-watches></app-site-watches>  -->
 
 <!-- <app-guard-watches></app-guard-watches> -->
 <!-- <div class="container">
