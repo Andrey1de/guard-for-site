@@ -64,6 +64,22 @@ export async function saveCsvFile$(
   window.URL.revokeObjectURL(url);
   a.remove();
 }
+export async function saveJsonFile$(
+  jsonObject: any,
+  flieName: string = 'iwatch.csv'
+) {
+  debugger;
+  const strBlob = JSON.stringify(jsonObject,null,2);
+  const a = document.createElement('a');
+  const blob = new Blob([strBlob], { type: 'application/json' });
+  const url = window.URL.createObjectURL(blob);
+
+  a.href = url;
+  a.download = flieName;
+  a.click();
+  window.URL.revokeObjectURL(url);
+  a.remove();
+}
 
 export function daySiteWatchesCsv(
   midnight: Date,

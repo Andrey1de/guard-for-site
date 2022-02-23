@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { TimeHelper } from './base/time-helper';
-import { IWatchCsv, saveCsvFile$ } from './interfaces/iwatch-csv';
+import {
+  IWatchCsv,
+  saveCsvFile$,
+  saveJsonFile$,
+  toCsvString,
+} from './interfaces/iwatch-csv';
 import { Globals } from './services/globals.service';
 import { WatchService } from './services/watch.service';
 import { ISiteWatchesRow } from './ui/isite-watches-row';
@@ -29,13 +34,25 @@ export class AppComponent implements OnInit {
   }
   arrWatchCsv: IWatchCsv[] = [];
   createCsvArray() {
-    debugger;
+    //debugger;
     this.arrWatchCsv = [];
     this.arrWatchCsv = this.W.create2022Csv('2022-02-01', 366 - 58);
   }
 
   async saveCsvFile() {
-    await saveCsvFile$(this.arrWatchCsv, 'iwatch-csv.csv');
+    const strs = this.arrWatchCsv.map((p) => toCsvString(p));
+
+    const www = {
+      guid: 'a48c0353-00cc-0000-0002-a661507890f4',
+      item: {
+        watches: strs,
+      },
+      life_seconds: 0,
+    };
+    //debugger;
+    const json = JSON.stringify(www, null, 2);
+    console.log(json);
+    await saveJsonFile$(www, 'iwatch-csv.json');
   }
   // async createPlan(
   //   strBegin: string,
@@ -93,4 +110,3 @@ var download_json_using_blob = function (fileName: string, content: any) {
   a.remove();
   // }
 };
-
