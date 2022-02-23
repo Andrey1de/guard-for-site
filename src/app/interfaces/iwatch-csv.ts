@@ -66,10 +66,10 @@ export async function saveCsvFile$(
 }
 export async function saveJsonFile$(
   jsonObject: any,
-  flieName: string = 'iwatch.csv'
+  flieName: string = 'iwatch.json'
 ) {
   debugger;
-  const strBlob = JSON.stringify(jsonObject,null,2);
+  const strBlob = JSON.stringify(jsonObject, null, 2);
   const a = document.createElement('a');
   const blob = new Blob([strBlob], { type: 'application/json' });
   const url = window.URL.createObjectURL(blob);
